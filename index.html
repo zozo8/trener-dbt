@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0a1428" />
+    <title>Asystent DBT — Twój trening między sesjami</title>
+    <style>
+      :root {
+        font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+        color-scheme: dark;
+        --bg: #091326;
+        --panel: #111f35;
+        --line: #2a3b54;
+        --muted: #b5c3d7;
+        --accent: #a7d4ff;
+        --mint: #85e1c8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: radial-gradient(
+            ellipse 75% 33% at 70% -10%,
+            #253d69 0%,
+            transparent 80%
+          ),
+          var(--bg);
+        color: #f4f8ff;
+      }
+      .container {
+        max-width: 1120px;
+        margin: auto;
+        padding: 0 24px;
+      }
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding-top: 24px;
+        padding-bottom: 24px;
+      }
+      .brand {
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        font-size: 1.22rem;
+      }
+      .brand b {
+        color: var(--mint);
+      }
+      a {
+        color: inherit;
+      }
+      .navlinks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+      .navlinks a {
+        text-decoration: none;
+      }
+      .navlinks a:hover {
+        color: white;
+      }
+      .hero {
+        padding: 76px 0 75px;
+        display: grid;
+        grid-template-columns: 1.25fr 0.75fr;
+        align-items: center;
+        gap: 56px;
+      }
+      .eyebrow {
+        color: var(--mint);
+        text-transform: uppercase;
+        letter-spacing: 0.17em;
+        font-size: 0.77rem;
+        font-weight: 800;
+      }
+      .hero h1 {
+        font-size: clamp(2.7rem, 6vw, 5.25rem);
+        line-height: 1.06;
+        letter-spacing: -0.065em;
+        margin: 20px 0;
+      }
+      .gradient {
+        color: var(--accent);
+      }
+      .lead {
+        color: #c6d4e7;
+        font-size: 1.13rem;
+        line-height: 1.7;
+        max-width: 680px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+      .btn {
+        border: 1px solid #597190;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        text-decoration: none;
+        background: #20334e;
+        color: #f3f8ff;
+        border-radius: 13px;
+        padding: 14px 20px;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+        min-height: 50px;
+        transition: transform 0.15s, background 0.15s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        background: #304967;
+      }
+      .btn.primary {
+        background: var(--mint);
+        border-color: var(--mint);
+        color: #0b2532;
+      }
+      .btn.primary:hover {
+        background: #b4f0dc;
+      }
+      .phone {
+        border: 8px solid #354762;
+        border-radius: 36px;
+        background: #10223b;
+        box-shadow: 0 30px 80px #0007, 0 0 0 1px #7390aa33;
+        padding: 27px 18px 22px;
+        max-width: 340px;
+        justify-self: center;
+        transform: rotate(3deg);
+        width: 100%;
+      }
+      .phonebar {
+        height: 5px;
+        width: 76px;
+        background: #56718c;
+        border-radius: 20px;
+        margin: 0 auto 28px;
+      }
+      .notification {
+        background: #213653;
+        border: 1px solid #49637f;
+        border-radius: 18px;
+        padding: 20px;
+      }
+      .notification small {
+        color: var(--mint);
+        font-size: 0.73rem;
+        font-weight: 750;
+      }
+      .notification h3 {
+        font-size: 1.1rem;
+        margin: 12px 0 7px;
+      }
+      .notification p {
+        font-size: 0.9rem;
+        color: #d5e2f2;
+        line-height: 1.6;
+        margin: 0;
+      }
+      .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      .chip {
+        background: #375374;
+        color: #e5f2ff;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.76rem;
+        font-weight: 700;
+      }
+      .section {
+        padding: 74px 0;
+      }
+      .section-head {
+        max-width: 790px;
+        margin-bottom: 30px;
+      }
+      .section h2 {
+        font-size: clamp(1.9rem, 3.3vw, 2.7rem);
+        line-height: 1.15;
+        letter-spacing: -0.045em;
+        margin: 12px 0;
+      }
+      .section-head p,
+      .bodycopy {
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 1.06rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .card {
+        padding: 26px;
+        background: linear-gradient(145deg, #15263e, #101d31);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+      }
+      .card h3 {
+        margin: 14px 0 8px;
+        font-size: 1.12rem;
+      }
+      .card p {
+        color: var(--muted);
+        line-height: 1.65;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+      .glyph {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
+        background: #2b4661;
+        color: var(--mint);
+        font-size: 1.4rem;
+      }
+      .requirements {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 13px;
+      }
+      .req {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+        padding: 19px;
+        background: #101e32;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+      .req .symbol {
+        color: var(--mint);
+        font-size: 1.25rem;
+      }
+      .req strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+      .req small {
+        display: block;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .example {
+        background: linear-gradient(110deg, #173d49, #182b47);
+        border: 1px solid #3e7278;
+        border-radius: 22px;
+        padding: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+      }
+      .bubble {
+        max-width: 85%;
+        padding: 13px 17px;
+        border-radius: 16px;
+        margin-bottom: 12px;
+        line-height: 1.5;
+      }
+      .bubble.user {
+        background: #4c6688;
+        margin-left: auto;
+        border-bottom-right-radius: 4px;
+      }
+      .bubble.bot {
+        background: #10273a;
+        border: 1px solid #52757d;
+        border-bottom-left-radius: 4px;
+      }
+      .timeline {
+        counter-reset: step;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .timeline .step {
+        padding: 20px;
+        background: #122039;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        color: var(--muted);
+        font-size: 0.89rem;
+        line-height: 1.55;
+      }
+      .timeline .step:before {
+        counter-increment: step;
+        content: counter(step);
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        background: #284f5a;
+        color: var(--mint);
+        font-weight: 850;
+        border-radius: 11px;
+        margin-bottom: 14px;
+      }
+      .timeline strong {
+        display: block;
+        color: white;
+        margin-bottom: 7px;
+      }
+      .promptpanel {
+        border: 1px solid #55807c;
+        border-radius: 25px;
+        background: linear-gradient(140deg, #183e46, #122339 55%);
+        padding: 34px;
+        box-shadow: 0 24px 70px #0003;
+      }
+      .promptpanel h2 {
+        margin: 8px 0;
+        font-size: 2rem;
+      }
+      .promptpanel p {
+        color: #d3e4e9;
+        line-height: 1.65;
+      }
+      .status {
+        min-height: 22px;
+        margin-top: 12px;
+        color: #a6f4d0;
+        font-size: 0.91rem;
+      }
+      details {
+        margin-top: 22px;
+        border-top: 1px solid #51716e;
+        padding-top: 17px;
+      }
+      summary {
+        cursor: pointer;
+        color: #e0eff3;
+        font-weight: 650;
+      }
+      textarea {
+        width: 100%;
+        min-height: 340px;
+        margin-top: 15px;
+        resize: vertical;
+        padding: 18px;
+        color: #ebf7ff;
+        background: #09182b;
+        border: 1px solid #557080;
+        border-radius: 13px;
+        font: 0.84rem/1.55 ui-monospace, Consolas, monospace;
+      }
+      .fine {
+        color: #98aec3;
+        font-size: 0.87rem;
+        line-height: 1.7;
+      }
+      .footer {
+        padding: 32px 0 50px;
+        border-top: 1px solid var(--line);
+      }
+      @media (max-width: 800px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding: 40px 0 55px;
+          gap: 32px;
+        }
+        .phone {
+          transform: none;
+        }
+        .grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .timeline {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .example {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 520px) {
+        .container {
+          padding: 0 18px;
+        }
+        .navlinks {
+          gap: 10px;
+          font-size: 0.75rem;
+        }
+        .grid,
+        .requirements,
+        .timeline {
+          grid-template-columns: 1fr;
+        }
+        .section {
+          padding: 48px 0;
+        }
+        .promptpanel {
+          padding: 23px;
+        }
+        .actions .btn {
+          width: 100%;
+        }
+        .hero h1 {
+          font-size: 2.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="container nav">
+      <div class="brand">◈ DBT <b>na co dzień</b></div>
+      <nav class="navlinks" aria-label="Nawigacja">
+        <a href="#jak-dziala">Jak działa</a
+        ><a href="#potrzebujesz">Co potrzebne</a
+        ><a href="#warsztaty">Warsztaty</a><a href="#prompt">Prompt</a>
+      </nav>
+    </header>
+    <main>
+      <section class="container hero">
+        <div>
+          <div class="eyebrow">Twoje umiejętności • każdego dnia</div>
+          <h1>
+            DBT nie kończy się
+            <span class="gradient">na sali terapeutycznej.</span>
+          </h1>
+          <p class="lead">
+            Osobisty asystent w ChatGPT przypomni o ćwiczeniu, pomoże wypełnić
+            kartę pracy i poprowadzi przez umiejętności DBT wtedy, kiedy
+            naprawdę ich potrzebujesz.
+          </p>
+          <div class="actions">
+            <a class="btn primary" href="#prompt">✦ Stwórz swojego asystenta</a
+            ><a class="btn" href="#jak-dziala">Zobacz, jak działa ↓</a>
+          </div>
+        </div>
+        <div class="phone" aria-label="Przykład przypomnienia na telefonie">
+          <div class="phonebar"></div>
+          <div class="notification">
+            <small>◉ CHATGPT · DBT · 13:00</small>
+            <h3>Czas na krótkie ćwiczenie</h3>
+            <p>
+              Dziś: „Mądry umysł”. Masz 2 minuty? Otwórz rozmowę — przejdziemy
+              przez to razem.
+            </p>
+            <div class="chips">
+              <span class="chip">▶ Zaczynam</span
+              ><span class="chip">↗ Później</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="jak-dziala" class="container section">
+        <div class="section-head">
+          <div class="eyebrow">01 / Idea</div>
+          <h2>Czym jest i jak działa?</h2>
+          <p>
+            To osobisty asystent, który pomaga ćwiczyć umiejętności DBT między
+            spotkaniami. Wysyłasz mu zdjęcia lub PDF-y z terapii, a on
+            porządkuje materiały, rozpoznaje ćwiczenia i prace domowe oraz
+            pomaga je wykonywać — jedno krótkie polecenie na raz. Może
+            przypominać o treningu, pomagać zaznaczać pola i redagować
+            odpowiedzi w kartach, a po zatwierdzeniu przygotować dokument do
+            wydrukowania.
+          </p>
+          <p>
+            Największa zaleta? Działa w codziennych sytuacjach. Wystarczy
+            napisać „Idę na spacer”, „Jem obiad” czy „Czuję silną złość”, aby
+            dostać krótką propozycję umiejętności dopasowaną do sytuacji. Może
+            zapisywać potwierdzone obserwacje i przygotowywać raport przed grupą
+            — bez noszenia papierów i pamiętania o wszystkim samodzielnie.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <div class="glyph">◷</div>
+            <h3>Przypomnienia</h3>
+            <p>
+              Ćwiczenia o wybranej porze, możliwość poproszenia o późniejszy
+              termin i krótkie instrukcje.
+            </p>
+          </article>
+          <article class="card">
+            <div class="glyph">▤</div>
+            <h3>Prace domowe</h3>
+            <p>
+              Jedno pytanie na raz, podpowiedzi do pól i gotowy materiał do
+              wydrukowania.
+            </p>
+          </article>
+          <article class="card">
+            <div class="glyph">✳</div>
+            <h3>DBT na żądanie</h3>
+            <p>
+              Wsparcie podczas posiłku, spaceru, zdenerwowania czy codziennych
+              aktywności.
+            </p>
+          </article>
+          <article class="card">
+            <div class="glyph">◎</div>
+            <h3>Testowanie metod</h3>
+            <p>
+              Wypróbuj techniki, oceń je w skali 0–10 i sprawdź, co Ci pomaga.
+            </p>
+          </article>
+          <article class="card">
+            <div class="glyph">▥</div>
+            <h3>Raport przed grupą</h3>
+            <p>
+              Zapis wykonanych ćwiczeń, trudności i tematów do omówienia z
+              terapeutą.
+            </p>
+          </article>
+          <article class="card">
+            <div class="glyph">♧</div>
+            <h3>Bez długich wykładów</h3>
+            <p>
+              Komunikaty mogą być bardzo krótkie: jedno zadanie, jeden krok,
+              jedno pytanie.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="container section">
+        <div class="section-head">
+          <div class="eyebrow">02 / W praktyce</div>
+          <h2>Wpisujesz jedno zdanie. Dostajesz jeden krok.</h2>
+        </div>
+        <div class="example">
+          <div>
+            <h3>Przykład: trening podczas posiłku</h3>
+            <p class="bodycopy">
+              Nie musisz wiedzieć, którą ulotkę otworzyć ani pamiętać
+              instrukcji. Asystent dobiera propozycję do sytuacji.
+            </p>
+          </div>
+          <div>
+            <div class="bubble user">Jem obiad.</div>
+            <div class="bubble bot">
+              Skup się na pierwszym kęsie. Zauważ smak i konsystencję. Napisz
+              „dalej”.
+            </div>
+            <div class="bubble user">Dalej.</div>
+            <div class="bubble bot">
+              Zjedz trzy kęsy bez telefonu. Zauważ, kiedy uwaga odpływa.
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="potrzebujesz" class="container section">
+        <div class="section-head">
+          <div class="eyebrow">03 / Start</div>
+          <h2>Co jest potrzebne?</h2>
+          <p>
+            Można zacząć bez płatnej subskrypcji. Dostęp do plików i liczba
+            zaplanowanych zadań zależą od planu i bieżących limitów konta.
+          </p>
+        </div>
+        <div class="requirements">
+          <div class="req">
+            <span class="symbol">✓</span>
+            <div>
+              <strong>Konto ChatGPT — konieczne</strong
+              ><small
+                >Bezpłatne wystarczy do rozpoczęcia; niektóre funkcje mają
+                ograniczenia.</small
+              >
+            </div>
+          </div>
+          <div class="req">
+            <span class="symbol">✓</span>
+            <div>
+              <strong>Materiały DBT — potrzebne</strong
+              ><small
+                >Zdjęcia, skany lub PDF-y własnych ulotek i kart pracy.</small
+              >
+            </div>
+          </div>
+          <div class="req">
+            <span class="symbol">＋</span>
+            <div>
+              <strong>Aplikacja na telefon — zalecana</strong
+              ><small
+                >Wygodne ćwiczenia w biegu i powiadomienia Push, jeśli
+                dostępne.</small
+              >
+            </div>
+          </div>
+          <div class="req">
+            <span class="symbol">＋</span>
+            <div>
+              <strong>Komputer — opcjonalny</strong
+              ><small
+                >Przydatny do przeglądania większych formularzy i
+                drukowania.</small
+              >
+            </div>
+          </div>
+          <div class="req">
+            <span class="symbol">＋</span>
+            <div>
+              <strong>ChatGPT Plus — opcjonalny</strong
+              ><small
+                >Wyższe limity; nie jest obowiązkowy do wypróbowania
+                pomysłu.</small
+              >
+            </div>
+          </div>
+          <div class="req">
+            <span class="symbol">＋</span>
+            <div>
+              <strong>Powiadomienia i drukarka — opcjonalne</strong
+              ><small
+                >Włącz Push do przypomnień; drukarka tylko, jeśli oddajesz
+                papierowe karty.</small
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="warsztaty" class="container section">
+        <div class="section-head">
+          <div class="eyebrow">04 / Instrukcja</div>
+          <h2>Jak uruchomić na warsztatach?</h2>
+          <p>
+            Wystarczy około pięciu minut na pierwszą konfigurację. Każdy
+            uczestnik tworzy własną rozmowę.
+          </p>
+        </div>
+        <div class="timeline">
+          <div class="step">
+            <strong>Otwórz ChatGPT</strong>Na telefonie albo komputerze.
+          </div>
+          <div class="step">
+            <strong>Skopiuj prompt</strong>Użyj przycisku poniżej.
+          </div>
+          <div class="step">
+            <strong>Wklej do rozmowy</strong>Odpowiedz na kilka pytań
+            konfiguracyjnych.
+          </div>
+          <div class="step">
+            <strong>Dodaj materiały</strong>Prześlij pierwszą ulotkę lub kartę
+            pracy.
+          </div>
+          <div class="step">
+            <strong>Przetestuj</strong>Uruchom krótkie ćwiczenie i sprawdź
+            przypomnienie.
+          </div>
+        </div>
+      </section>
+      <section id="prompt" class="container section">
+        <div class="promptpanel">
+          <div class="eyebrow">05 / Gotowe do skopiowania</div>
+          <h2>Twój własny asystent DBT</h2>
+          <p>
+            Jeden prompt, który konfiguruje sposób pracy, krótkie instrukcje,
+            przypomnienia, karty pracy oraz raporty. Po wklejeniu ChatGPT zada
+            Ci pierwsze pytanie.
+          </p>
+          <div class="actions">
+            <button type="button" id="copyButton" class="btn primary">
+              ▣ Kopiuj cały prompt</button
+            ><a
+              class="btn"
+              href="https://chatgpt.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Otwórz ChatGPT ↗</a
+            >
+          </div>
+          <div
+            id="status"
+            class="status"
+            role="status"
+            aria-live="polite"
+          ></div>
+          <details>
+            <summary>Pokaż lub edytuj treść prompta</summary>
+            <textarea
+              id="promptText"
+              aria-label="Pełny prompt DBT"
+              spellcheck="false"
+            ></textarea>
+          </details>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="container fine">
+        <strong>Ważne:</strong> Asystent służy do wspierania pracy między
+        sesjami, nie zastępuje terapeuty, diagnozy ani pomocy kryzysowej. Nie
+        przesyłaj danych innych osób bez ich zgody. Powiadomienia zależą od
+        ustawień konta i telefonu; zadania automatyczne mogą nie mieć dostępu do
+        przesłanych plików, dlatego potrzebne instrukcje warto umieszczać w
+        treści przypomnienia.
+      </div>
+    </footer>
+    <script>
+      const prompt = `# Mój osobisty asystent DBT
+
+Chcę, żebyś został moim osobistym asystentem terapii dialektyczno-behawioralnej (DBT).
+
+Twoim zadaniem jest pomagać mi regularnie ćwiczyć umiejętności DBT, wykonywać prace domowe, wypełniać karty pracy i przygotowywać się do terapii grupowej.
+
+## 1. Materiały z terapii
+
+Będę przesyłać Ci zdjęcia, skany i pliki PDF otrzymane od terapeutów.
+
+- Analizuj je i kataloguj według modułów DBT.
+- Rozpoznawaj teorię, ćwiczenia i karty pracy.
+- Pytaj, które zadania zostały zadane przez terapeutę i na kiedy.
+- Rozróżniaj zadania obowiązkowe od dodatkowych propozycji ćwiczeń.
+- Uwzględniaj nowe materiały i aktualizuj plan.
+- Opieraj instrukcje przede wszystkim na przesłanych materiałach.
+- Nie wymyślaj zaleceń terapeuty.
+
+## 2. Codzienne ćwiczenia
+
+Pomóż mi ustawić codzienne przypomnienie Push na telefonie o wybranej godzinie.
+
+Każde przypomnienie powinno:
+- Wskazywać konkretne ćwiczenie.
+- Podawać przewidywany czas.
+- Oferować rozpoczęcie lub przełożenie zadania.
+- Prowadzić mnie krok po kroku.
+- Po zakończeniu pytać o efekty i zapisywać moją ocenę.
+
+Pomagaj testować różne techniki, a następnie wybierać te, które najlepiej mi służą. Jeśli automatyczne przełożenie lub inne działanie nie jest dostępne, powiedz mi to wprost.
+
+## 3. Trening DBT na żądanie
+
+Będę pisać krótkie komunikaty opisujące aktualną sytuację, np.:
+- „Jem posiłek”.
+- „Idę na spacer”.
+- „Jestem na siłowni”.
+- „Czuję złość”.
+- „Zaraz wybuchnę”.
+- „Pokłóciłem się z kimś”.
+- „Nie mogę zasnąć”.
+- „Czuję ogromne napięcie”.
+
+Potraktuj takie komunikaty jako prośbę o dobranie odpowiedniej umiejętności DBT.
+
+Dobieraj ćwiczenia do sytuacji, dostępnego czasu i mojego samopoczucia. Przy silnym pobudzeniu najpierw pomagaj mi bezpiecznie zareagować. Nie proponuj ćwiczeń rozpraszających uwagę podczas prowadzenia samochodu ani wykonywania niebezpiecznych czynności.
+
+## 4. Prace domowe i formularze
+
+Pomagaj mi wypełniać zadane karty pracy.
+- Zadawaj jedno pytanie na raz.
+- Wyjaśniaj niezrozumiałe rubryki.
+- Pomagaj rozpoznawać emocje, myśli, zachowania i konsekwencje.
+- Proponuj sformułowania odpowiedzi na podstawie moich wypowiedzi.
+- Podpowiadaj, które pola zaznaczyć.
+- Nigdy nie wymyślaj moich doświadczeń ani odpowiedzi.
+- Pozwalaj wracać do niedokończonych formularzy.
+- Po moim zatwierdzeniu pomagaj przygotować wypełnione dokumenty PDF do wydrukowania.
+
+## 5. Dziennik i ocena ćwiczeń
+
+Po ćwiczeniu krótko zapytaj:
+- Czy zostało wykonane?
+- Na ile było pomocne (0–10)?
+- Co było trudne?
+- Co zauważyłem?
+
+Rejestruj wyłącznie potwierdzone informacje. Jeśli nie masz dostępu do wcześniejszych wyników, poproś o nie.
+
+## 6. Cotygodniowy raport
+
+Zapytaj mnie, kiedy mam terapię grupową, i zaproponuj ustawienie przypomnienia z raportem przed spotkaniem.
+
+Raport powinien zawierać:
+- Wykonane i niewykonane ćwiczenia (tylko jeśli ich status jest znany).
+- Oceny skuteczności metod.
+- Obserwacje i trudności.
+- Status prac domowych.
+- Brakujące formularze.
+- Tematy do omówienia na grupie.
+
+Pomagaj mi uzupełniać brakujące karty przed spotkaniem.
+
+## 7. Styl komunikacji
+
+To bardzo ważne:
+- Pisz BARDZO KRÓTKO.
+- Jedno polecenie lub pytanie na raz.
+- Nie wygłaszaj wykładów.
+- Nie tłumacz teorii, jeśli o to nie proszę.
+- Używaj prostego, codziennego języka.
+- Prowadź mnie interaktywnie.
+- Dostosuj długość i trudność ćwiczenia do sytuacji.
+- Jeśli poproszę o szczegóły, dopiero wtedy wyjaśniaj szerzej.
+
+Twoim zadaniem nie jest zastępowanie psychoterapeuty ani stawianie diagnoz, lecz pomaganie mi w ćwiczeniu umiejętności DBT pomiędzy sesjami. W sytuacji bezpośredniego zagrożenia bezpieczeństwo i kontakt z odpowiednią pomocą są ważniejsze niż trening.
+
+## 8. Konfiguracja początkowa
+
+Zacznij od ustalenia:
+1. W jaki dzień i o której godzinie mam terapię grupową?
+2. O której godzinie chcę codzienne przypomnienie?
+3. Kiedy chcę otrzymywać cotygodniowy raport?
+4. Czy wolę krótkie ćwiczenia, czy dłuższe sesje?
+
+Zadawaj pytania pojedynczo.
+
+Następnie poproś mnie o przesłanie materiałów DBT i ustalenie aktualnych prac domowych.
+
+Utwórz dostępne zaplanowane zadania z przypomnieniami. Pamiętaj, że automatyczne zadania mogą nie widzieć wszystkich załączników i rozmów: umieść potrzebne instrukcje w treści zadania. Jeśli funkcja nie jest dostępna, jasno mi to powiedz i pomóż znaleźć alternatywę.
+
+**Zacznij teraz konfigurację mojego asystenta DBT.**`;
+      const promptText = document.getElementById('promptText');
+      const copyButton = document.getElementById('copyButton');
+      const status = document.getElementById('status');
+      promptText.value = prompt;
+      copyButton.addEventListener('click', async () => {
+        const value = promptText.value;
+        try {
+          if (!navigator.clipboard || !window.isSecureContext)
+            throw Error('no clipboard');
+          await navigator.clipboard.writeText(value);
+          status.textContent = '✓ Skopiowano. Otwórz ChatGPT i wklej prompt.';
+          copyButton.textContent = '✓ Skopiowano';
+        } catch (e) {
+          promptText.closest('details').open = true;
+          promptText.focus();
+          promptText.select();
+          try {
+            if (!document.execCommand('copy')) throw Error('no copy');
+            status.textContent = '✓ Skopiowano. Otwórz ChatGPT i wklej prompt.';
+            copyButton.textContent = '✓ Skopiowano';
+          } catch (e) {
+            status.textContent = 'Zaznaczono tekst — skopiuj go ręcznie.';
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
